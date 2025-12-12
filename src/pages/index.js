@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
+import Head from '@docusaurus/Head';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
@@ -20,7 +21,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
+            立即进入文档
           </Link>
         </div>
       </div>
@@ -32,8 +33,19 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title={siteConfig.title}
+      description="Shopify 学院 - 面向开发者的 Shopify 学习与实践指南">
+      <Head>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Shopify 学院',
+          url: 'https://debingfeng.github.io/shopify/',
+          description:
+            'Shopify 学院：面向中文开发者的 Shopify 学习与实践指南，包含 Theme 工程化、App/API、埋点与 Recipes 示例。',
+          inLanguage: 'zh-CN',
+        })}</script>
+      </Head>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
