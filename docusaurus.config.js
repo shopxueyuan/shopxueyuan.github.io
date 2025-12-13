@@ -7,10 +7,10 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 
 const BAIDU_TONGJI_ID = process.env.BAIDU_TONGJI_ID || 'YOUR_BAIDU_TONGJI_ID';
-const organizationName = process.env.ORGANIZATION_NAME || 'debingfeng';
-const projectName = process.env.PROJECT_NAME || 'shopify';
+const organizationName = process.env.ORGANIZATION_NAME || 'shopxueyuan';
+const projectName = process.env.PROJECT_NAME || 'shopxueyuan.github.io';
 const siteUrl = `https://${organizationName}.github.io`;
-const siteBaseUrl = `/${projectName}/`;
+const siteBaseUrl = process.env.SITE_BASE_URL || '/';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 

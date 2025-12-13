@@ -40,7 +40,7 @@ export default function Home() {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           name: 'Shopify 学院',
-          url: 'https://debingfeng.github.io/shopify/',
+          url: 'https://shopxueyuan.github.io/',
           description:
             'Shopify 学院：面向中文开发者的 Shopify 学习与实践指南，包含 Theme 工程化、App/API、埋点与 Recipes 示例。',
           inLanguage: 'zh-CN',

@@ -20,9 +20,9 @@ npm run build
 - Baidu 统计：部署时设置环境变量 `BAIDU_TONGJI_ID`，生产环境会自动注入 HM 脚本。
 
 ## 部署与发布
-- GitHub Pages 域名：`https://debingfeng.github.io/shopify/`，`baseUrl` 默认已配置为 `/shopify/`（可用环境变量覆盖）。
+- GitHub Pages 域名：`https://shopxueyuan.github.io/`，`baseUrl` 默认已配置为 `/`（可用环境变量覆盖）。
 - 自动发布：推送到 `main` 会触发 `.github/workflows/deploy.yml`，执行 `npm ci && npm run build`，并将 `./build` 发布到 `gh-pages` 分支。
-- 可选环境变量：`ORGANIZATION_NAME`、`PROJECT_NAME`、`BAIDU_TONGJI_ID`（填入你的百度统计 ID 后，生产环境会自动加载 hm.js）。
+- 可选环境变量：`ORGANIZATION_NAME`、`PROJECT_NAME`、`SITE_BASE_URL`、`BAIDU_TONGJI_ID`（填入你的百度统计 ID 后，生产环境会自动加载 hm.js）。
 - 首次使用前，请在仓库 Settings → Pages 选择 GitHub Actions（或允许使用 `gh-pages` 分支）。
 
 ## 目录速览
