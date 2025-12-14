@@ -1,0 +1,47 @@
+---
+title: 企业级 Shopify 架构全景图
+description: 从系统视角描述企业级 Shopify 架构与数据流
+sidebar_position: 3
+---
+
+## 1. 架构视角
+
+```
+用户终端（Web/Mobile/小程序/线下触点）
+  ↓
+前台层：Theme / Hydrogen / Headless（CDN + Edge）
+  ↓
+Shopify Core：商品、订单、Checkout、支付、税务
+  ↕
+扩展层：App / Custom App / Admin API / Storefront API / Webhook
+  ↕
+企业系统：ERP / OMS / WMS / CRM / CDP / PSP / Tax / BI / ESP
+  ↕
+数据流：事件（Webhook→队列）+ 批处理（GraphQL bulk）+ 实时查询（GraphQL/REST）
+```
+
+## 2. 分层说明
+
+- 前台层：Theme（快）、Headless/Hydrogen（灵活）。决定体验、性能、AB 实验能力。
+- Shopify Core：交易事实源（Product/Variant/Order/Customer/Inventory/Checkout），不可替代。
+- 扩展层：App & API & Webhook；实现业务规则、集成、自动化。
+- 企业系统：承载财务/库存/履约/客服/营销/分析；与 Shopify 通过事件驱动+API 同步。
+- 数据流：实时（Webhook→队列→处理器）、增量批量（GraphQL bulk）、查询（GraphQL/REST）。
+
+## 3. 关键设计点
+
+- 多店/多市场：按市场分店或分前台；共享数据通过中台或 App 同步，避免一店包天下。
+- 库存与履约：Inventory API + Fulfillment API + 外部 WMS；Order 为交易事实，WMS 为库存事实。
+- 支付与税务：官方能力优先，缺口由 PSP/Tax 服务补齐；对账在 ERP/财务系统完成。
+- 数据中台/BI：Order/Fulfillment/Refund 为事实表，Product/Variant/Customer 为维度；Webhook 实时，bulk 校验。
+- 监控与安全：Webhook 幂等/HMAC，API 限流预案，异常告警与重放。
+
+## 4. 全景 Checklist
+
+- [ ] 前台架构选型明确（Theme vs Headless），性能指标与 AB 能力达标。
+- [ ] 订单事实与库存事实分离，双向同步策略清晰。
+- [ ] Webhook 事件流 + 重放机制落地，批处理校验路径存在。
+- [ ] ERP/OMS/WMS/CRM/BI/ESP 集成路径已验证（权限、限流、模型映射）。
+- [ ] 支付/税务/发票合规方案明确，对账流程可执行。
+- [ ] 多市场/多店策略明确，SKU/价格/库存/内容分发方式清晰。
+- [ ] 监控/告警/安全策略（HMAC、RBAC、限流、审计）上线。

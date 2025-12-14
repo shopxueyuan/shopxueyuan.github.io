@@ -1,0 +1,37 @@
+---
+title: 企业级 Shopify 开发规范
+description: Theme、App/API、协作、交付的工程与维护指南
+sidebar_position: 11
+---
+
+## 1. Theme 规范
+
+- 代码组织：Section/Block/Snippet 分层；避免在 Section 写业务逻辑。
+- 性能基线：LCP < 2.5s，CLS 可控；首屏必需资源最小化；第三方脚本治理。
+- 配置策略：schema 驱动可配置；Metafields/Metaobjects 结构化，不硬编码。
+- 多市场：i18n 文案、货币、法律文案可配置；媒体按市场切换。
+- 测试：关键模板（PDP/Collection/Cart/Checkout 前页）具备回归用例，视觉回归关注核心模块。
+
+## 2. App/API 规范
+
+- 数据模型对齐：以 Variant 为库存/价格单位；Order 为交易事实；Fulfillment/Refund 事件必接。
+- 调用策略：GraphQL 优先，批量/增量；写操作幂等；限流处理与重试。
+- 安全：最小权限（Scopes），HMAC 校验，敏感数据脱敏存储。
+- 日志与监控：请求日志、失败重试、告警；Webhook 重放与死信队列。
+- 发布与回滚：灰度/环境分层（dev/stage/prod），版本化配置，紧急开关。
+
+## 3. 协作与交付
+
+- 分支与评审：Feature Branch + PR 评审，前后端/集成联合评估。
+- 文档：接口契约、事件模型、配置清单、运行手册；变更日志标准化。
+- 环境管理：沙箱店/测试店，数据隔离；Mock 工具用于前端联调。
+- 质量基线：Lint/格式化、单测（核心逻辑）、集成测试（关键事件流）。
+
+## 4. 规范 Checklist
+
+- [ ] Theme 分层清晰，性能基线与多市场配置达标。
+- [ ] App/API 有幂等、限流、重试、监控、回滚。
+- [ ] Webhook 事件流（订单/履约/退款/库存）已接入并可重放。
+- [ ] 数据模型对齐：Variant/Order/Fulfillment/Refund/Customer 语义清晰。
+- [ ] 文档、变更日志、运行手册可查；环境与数据隔离。
+- [ ] 安全与合规：Scopes 最小化，敏感数据脱敏，日志审计。
