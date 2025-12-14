@@ -1,0 +1,51 @@
+---
+title: Metafields 与 Metaobjects 的正确用法（Shopify 实战指南）
+description: 避免把 Shopify 当 WordPress 用的内容建模与工程实践
+sidebar_position: 7
+---
+
+## 1. 为什么 Metafields 不是万能的
+
+- 常见误用场景：把所有“附加信息”都塞进单个 metafield（如 JSON 字符串）、把富文本当组件、用 tags/title 充当属性、用 metafield 模拟数据库。
+- 技术债问题：字段不可复用、无法结构化查询、翻译/多市场不可维护、Theme 逻辑膨胀（大量 `if/else` 判断和字符串解析）。
+
+结论：Metafields 是结构化扩展字段，不是无模式的 KV 存储；模型不清晰会导致运营端配置混乱、前端逻辑复杂。
+
+## 2. Metafields vs Metaobjects 的核心区别
+
+- Metafields：给现有对象（Product/Variant/Collection/Shop 等）“加字段”。适合少量、与主体强相关的属性，例如产品卖点 3 条、物流时效、质保天数。
+- Metaobjects：独立的内容类型，可被多个主体引用。适合可复用的结构化内容，如 FAQ、规格表、信任信息模板、配送政策、团队成员。
+
+建模思路：先看数据是否应随主体生命周期变化（选 Metafield），还是应作为可复用实体被引用（选 Metaobject）。避免把复用内容硬塞到 metafields。
+
+## 3. 常见内容模型示例
+
+- 产品卖点：Product Metafield `namespace:key`=`detail.bullets`，类型为 list/text（最多 3-5 条），供 PDP 展示。
+- FAQ：创建 Metaobject `faq_item`（问题/答案/排序），通过 Metaobject list 引用到 Product 或 Collection。
+- 规格参数：用 Metaobject `spec_table`（键值对列表），PDP 通过 metafield 引用此表，方便多产品复用。
+- 信任信息：Metaobject `trust_badge`（图标/标题/描述），按市场或配送地区分组；Product 或全局 Shop metafield 引用对应组。
+
+## 4. Theme 中的正确使用方式
+
+- Liquid 访问示例：`product.metafields.detail.bullets`（list）、`product.metafields.spec.table.value`（引用 metaobject）。引用型字段要先取到对象再渲染其属性。
+- Section 设计建议：Section 只负责布局与渲染，Block 用于可配置的展示顺序；将“数据绑定”与“样式开关”分离，避免在 Section 写入硬编码的字段名，改用 schema 配置选择器（动态选择 metafield/ metaobject）。
+
+## 5. 后台配置建议（给运营/商家）
+
+- 字段设计：少而精，命名空间清晰（如 `detail`, `policy`, `spec`）。明确类型（text/number/list/reference），避免自由文本堆砌。
+- 避免混乱：提供使用手册与示例截图；限制字段数量与长度；对 Metaobject 设置必填字段与校验；不同市场/语言分开字段而不是共用一份混写。
+
+## 6. 企业级使用注意事项
+
+- 多语言：使用 `translatable` metafields 或按语言拆分字段；引用型字段在不同语言下要有对应实例，避免跨语言指向同一内容。
+- 维护成本：制定命名规范与生命周期（创建/废弃流程）；定期审计未使用的 metafields/metaobjects；在 CI/Lint 中校验 schema 变更与模板使用。
+
+## 7. 最佳实践 Checklist
+
+- [ ] 判定字段是否应“附着”在主体上（Metafield）还是可复用实体（Metaobject）。  
+- [ ] 命名空间/键一致且有文档说明；禁止随意新增键。  
+- [ ] 结构化类型优先：list、number、boolean、reference，避免自由文本拼 JSON。  
+- [ ] Theme 中通过 schema 选择字段，Section 不写死命名。  
+- [ ] 引用型字段有容错：缺失时优雅降级，不报错。  
+- [ ] 多语言/多市场有独立字段或实例，并在渲染时按上下文选择。  
+- [ ] 定期审计未使用字段与孤立 metaobject；移除冗余，更新文档。  
