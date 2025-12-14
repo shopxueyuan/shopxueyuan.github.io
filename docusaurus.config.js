@@ -113,18 +113,21 @@ const config = {
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'docsSidebar',
+            type: 'dropdown',
+            label: '学习路径',
             position: 'left',
-            label: '文档',
+            items: [
+              {label: '开发者 Developer Track', to: '/docs/tracks/developer/'},
+              {label: '运营者 Operator Track', to: '/docs/tracks/operators/'},
+              {label: '中小商家 Merchant Track', to: '/docs/tracks/merchants/'},
+              {label: '企业 Enterprise Track', to: '/docs/tracks/enterprise/'},
+            ],
           },
-          {
-            type: 'docSidebar',
-            sidebarId: 'recipesSidebar',
-            docsPluginId: 'recipes',
-            position: 'left',
-            label: 'Recipes',
-          },
+          {label: '知识库', to: '/docs/topics/', position: 'left'},
+          {label: '资源库', to: '/docs/resources/', position: 'left'},
+          {label: '社区', to: '/docs/community/', position: 'left'},
+          {label: '企业服务', to: '/docs/enterprise-services/', position: 'left'},
+          {label: '更新日志', to: '/docs/changelog/', position: 'left'},
           {
             href: `https://github.com/${organizationName}/${projectName}`,
             label: 'GitHub',
@@ -136,17 +139,71 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: '文档',
+            title: '学习路径',
             items: [
               {
-                label: '站点介绍',
-                to: '/docs/intro',
+                label: '开发者 Track',
+                to: '/docs/tracks/developer/',
+              },
+              {
+                label: '运营者 Track',
+                to: '/docs/tracks/operators/',
+              },
+              {
+                label: '商家 Track',
+                to: '/docs/tracks/merchants/',
+              },
+              {
+                label: '企业 Track',
+                to: '/docs/tracks/enterprise/',
               },
             ],
           },
           {
-            title: '更多',
+            title: '资源与社区',
             items: [
+              {
+                label: '知识库 Topics',
+                to: '/docs/topics/',
+              },
+              {
+                label: '资源库 Resources',
+                to: '/docs/resources/',
+              },
+              {
+                label: '社区',
+                to: '/docs/community/',
+              },
+              {
+                label: '更新日志',
+                to: '/docs/changelog/',
+              },
+            ],
+          },
+          {
+            title: '企业服务',
+            items: [
+              {
+                label: '解决方案',
+                to: '/docs/enterprise-services/solutions',
+              },
+              {
+                label: '预约咨询',
+                to: '/docs/enterprise-services/contact',
+              },
+              {
+                label: 'Recipes',
+                href: '/recipes',
+              },
+            ],
+          },
+          {
+            title: '联系',
+            items: [
+              {
+                label: '联系邮箱',
+                href: 'mailto:shopxueyuan2025@163.com',
+              },
               {
                 label: 'GitHub',
                 href: `https://github.com/${organizationName}/${projectName}`,

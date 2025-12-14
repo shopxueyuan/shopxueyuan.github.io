@@ -1,23 +1,87 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+/* src/pages/index.module.css */
+.hero {
+  padding: 4rem 0 2rem;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+.heroTitle {
+  font-size: 3rem;
+  line-height: 1.1;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 52rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.heroMeta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.section {
+  padding: 2.5rem 0;
+}
+
+.sectionHeader {
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  margin-top: 0.25rem;
+  opacity: 0.85;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  grid-column: span 12;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px;
+  padding: 1rem;
+  background: var(--ifm-background-surface-color);
+}
+
+@media (min-width: 768px) {
+  .card {
+    grid-column: span 6;
+  }
+}
+@media (min-width: 996px) {
+  .card {
+    grid-column: span 4;
   }
 }
 
-.buttons {
+.cardDesc {
+  opacity: 0.9;
+  min-height: 3rem;
+}
+
+.cardActions {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.ctaRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
