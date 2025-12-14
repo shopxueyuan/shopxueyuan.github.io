@@ -1,0 +1,77 @@
+---
+title: Shopify 技术架构全景（中文工程视角）
+description: 从工程角度理解 Shopify 的整体技术架构与职责边界
+sidebar_position: 1
+---
+
+## 为什么开发者必须先理解 Shopify 架构
+
+Shopify 并不是一个传统意义上的 CMS，而是一个以电商交易为核心的 SaaS 平台加扩展生态系统。
+
+如果不理解它的架构边界，常见结果是：
+- Theme 越写越重
+- App 职责不清
+- 性能、转化、数据问题相互甩锅
+
+本文目标是用工程视角，帮助开发者建立 Shopify 的整体心智模型。
+
+---
+
+## Shopify 的整体架构分层
+
+```text
+Browser
+ ↓
+Theme（Liquid / JS / CSS）
+ ↓
+Storefront API（可选）
+ ↓
+Shopify Core（商品 / 订单 / Checkout）
+ ↑
+Admin API / Webhook
+ ↑
+App / Custom App / 外部系统
+```
+
+---
+
+## 前端层：Theme 的真实职责
+
+Theme 的核心职责只有三件事：
+
+1. 页面渲染（PDP / Collection / Cart）
+2. 用户交互（变体选择、加购）
+3. 调用平台能力（Cart / Checkout）
+
+Theme 不应该承担复杂业务逻辑或跨系统规则。
+
+---
+
+## Shopify Core：不可绕过的系统边界
+
+Shopify Core 负责：
+
+* 商品、变体、库存
+* 订单、支付、税务
+* 结账流程（Checkout）
+
+这是平台最稳定、也是最不可替代的一层。
+
+---
+
+## 扩展层：App、API 与 Webhook
+
+* Admin API：数据读写
+* Webhook：事件驱动
+* App：将外部系统能力接入 Shopify
+
+企业级系统几乎都通过这一层与 Shopify 交互。
+
+---
+
+## 一个工程结论
+
+> Theme 负责展示
+> App 负责扩展
+> Shopify Core 负责交易与合规
+

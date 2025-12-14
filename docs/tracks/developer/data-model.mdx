@@ -1,0 +1,48 @@
+---
+title: Shopify 数据模型快速理解
+description: 用工程视角理解 Shopify 的核心数据对象
+sidebar_position: 4
+---
+
+## 核心对象关系
+
+```text
+Product
+ └── Variant
+
+Order
+ ├── LineItem → Variant
+ └── Customer
+```
+
+---
+
+## Product 与 Variant 的区别
+
+* Product：商品抽象
+* Variant：真正参与交易的单位
+
+价格、库存、SKU 都在 Variant 上。
+
+---
+
+## Order 的工程意义
+
+Order 是：
+
+* 业务事实
+* 财务依据
+* 自动化起点
+
+---
+
+## Customer 的常见误区
+
+Customer 并不等同于账号系统，而是交易主体。
+
+---
+
+## Metafields 与 Metaobjects
+
+它们是扩展 Shopify 数据模型的官方方式，避免滥用 tags 或 title。
+

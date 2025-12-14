@@ -1,0 +1,58 @@
+---
+title: Section / Block 设计模式
+description: 可维护 Shopify Theme 的工程化设计方式
+sidebar_position: 3
+---
+
+## 为什么 Theme 需要设计模式
+
+没有设计模式的 Theme 通常会：
+- Section 体积失控
+- 复用性差
+- 改动风险高
+
+---
+
+## 推荐的组件分层
+
+```text
+Section（容器）
+ ├── Block（配置）
+ │    └── Snippet（渲染）
+```
+
+---
+
+## Section 的职责
+
+* 页面结构
+* 数据绑定
+* 布局控制
+
+原则：Section 不写复杂业务逻辑。
+
+---
+
+## Block 的职责
+
+* 内容变体
+* 配置驱动显示
+
+Block 让商家具备更高的可配置能力。
+
+---
+
+## Snippet 的职责
+
+* 纯渲染
+* 无状态
+* 高复用
+
+---
+
+## 黄金原则
+
+> Section 管结构
+> Block 管配置
+> Snippet 管展示
+
