@@ -1,0 +1,49 @@
+---
+title: Admin API 常用对象实战：从业务场景理解 Shopify 数据模型
+description: 不做字段翻译，聚焦“什么时候用什么对象”的工程与业务决策
+sidebar_position: 8
+---
+
+## 1. 为什么很多开发者“会用 API，但用得很糟”
+
+- 只看字段，不看业务语义：把 Product 当 SKU 系统、把 Order 当分析仓库，导致后续扩展困难。
+- 过度请求 / 错误建模：需要变体库存却反复拉全量产品，需要订单摘要却请求明细，耗尽配额还拖慢系统。
+
+结论：Admin API 是围绕交易与运营的对象体系，先搞清对象职责，再决定调用策略。
+
+## 2. Shopify Admin API 的数据模型全景（文字描述）
+
+- **Product / Variant**：Product 是商品概念容器，Variant 是真正销售与库存单位；价格、库存、SKU 都在 Variant 上。
+- **Order / LineItem**: Order 是交易事实，LineItem 对应当时购买的 Variant 快照。退款、履约会在 Order 上生成子对象，不能当实时库存源。
+- **Customer**：交易主体，不等同会员系统；包含联系方式、标签、营销状态。涉及隐私与合规，需要最小化拉取。
+- **Fulfillment / Refund**：Fulfillment 表示发货与物流状态，Refund 表示售后资金流。两者都与 Order 关联，但各自有生命周期与事件。
+
+## 3. 高频业务场景 × 对应对象选择
+
+- **订单同步**：目标是“交易事实 + 状态变化”。用 Order 基本信息 + Fulfillment/Refund 事件；用 `updated_at` + cursor 分页增量同步，避免全量重扫。
+- **发货状态**：不要盯 Order，本质在 Fulfillment。订阅履约 Webhook（`fulfillments/create|update`），按 `status`、`tracking_info` 更新下游系统。
+- **客户分析**：不要直接以 Order 做指标计算。先拉 Customer（分批、按标签/营销状态），再在分析侧聚合订单与生命周期事件。最小化 PII。
+- **商品管理**：价格/库存/属性变更应围绕 Variant；媒体与描述在 Product。批量调整库存用 Inventory APIs，不要每次更新整产品。
+
+## 4. 常见误用与反模式
+
+- 用 Product 当 SKU 系统：SKU、库存、价格全写在 Product 自定义字段，忽略 Variant，导致多规格无法扩展。
+- 用 Order 做分析仓库：直接在业务侧反复扫订单做统计，既慢又容易超额。应做增量同步，落地到分析存储再算。
+- 忽略 Fulfillment 层：只看 Order `financial_status` 判断发货，结果发货状态不同步，售后场景失效。
+- 过度写入：为改一个库存调用多次 update 产品，或在高并发下触发写入限流。
+
+## 5. API 使用层面的工程建议
+
+- 请求策略：读多写少；增量优先（`updated_at` + cursor）；批量优先（Inventory、Price 相关）。避免全量扫与重复拉媒体。
+- 权限设计：最小权限原则；按业务拆分 App Scope，例如“库存同步”不需要客户数据，“客服工具”不需要产品写权限。
+- Rate Limit 思路：GraphQL 有成本点数，REST 有节流；把“必需写”放优先队列，读请求做缓存与合并；失败与限流要有重试与回退。
+
+## 6. 实战 Checklist（开发前必读）
+
+- [ ] 场景对应的核心对象已明确（Product/Variant/Order/Fulfillment/Refund/Customer）。  
+- [ ] 同步策略是增量的：有 `updated_at` 游标与重试机制；避免全量循环。  
+- [ ] Variant/Inventory 是库存与价格的唯一来源，不在自定义字段重复存储。  
+- [ ] Fulfillment/Refund 事件有订阅与处理，发货/售后状态不靠猜测。  
+- [ ] 最小权限：App Scope 按业务拆分，避免无关数据曝光。  
+- [ ] Rate limit 预案：读请求缓存/合并，写请求排队与降级；限流/失败有重试。  
+- [ ] 分析需求与交易事实分离：分析在自有存储做，Admin API 只提供事实数据。  
