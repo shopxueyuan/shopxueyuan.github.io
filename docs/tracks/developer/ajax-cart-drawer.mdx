@@ -1,0 +1,75 @@
+---
+title: Ajax Cart + Drawer 的完整实现（Shopify Theme 实战）
+description: 架构、状态与交互层面的可维护 Ajax Cart 方案
+sidebar_position: 6
+---
+
+## 1. 为什么要用 Ajax Cart + Drawer
+
+- 转化率与 UX：减少跳转和等待，保留购物上下文，降低“回到 PDP 再找回状态”的流失。
+- 默认 Cart Page 的不足：整页跳转、状态丢失、难以做实时 Upsell。Drawer 让加购后留在当前页，用短路径完成确认与推荐。
+
+## 2. Shopify Cart 的基础机制
+
+- Cart API 简述：`/cart/add.js`、`/cart/change.js`、`/cart/update.js`、`/cart.js`；均返回 JSON，可在 Theme JS 中直接调用。
+- 常见事件流：`add` → 拉取最新 cart → 更新 UI；`change`/`update` → 服务端校验库存与价格 → 返回新 cart。应始终以返回的 cart 作为单一真相源。
+
+## 3. Ajax Cart 的前端架构设计
+
+- 状态管理：维护一个 `cartStore`（items、totals、errors、loading）。所有 UI 订阅它，避免多个组件各自请求。
+- UI 与数据解耦：Drawer 只是展示层，动作（add/change/remove）由 service 层发起并更新 `cartStore`，UI 只读状态、派发事件。
+- Drawer 打开/关闭机制：使用独立的 UI 状态（`isOpen`），由全局事件（如 `cart:add:success`）触发打开；允许配置 “只在首次加购弹出” 或 “购物车按钮手动打开”。
+
+## 4. 核心实现流程（文字 + 伪代码）
+
+### Add to Cart
+1) 前端收集 variantId、quantity、attributes。  
+2) `POST /cart/add.js`。  
+3) 成功后刷新 cart（`GET /cart.js`）并写入 `cartStore`，派发 `cart:add:success`。  
+4) 打开 Drawer，展示最新行项目。
+
+```js
+async function addToCart(payload) {
+  cartStore.setLoading(true);
+  const res = await fetch('/cart/add.js', {method: 'POST', body: toForm(payload)});
+  if (!res.ok) return handleError(res);
+  await refreshCart();
+  emit('cart:add:success');
+}
+```
+
+### 更新数量
+1) 由行项目触发 `change`。  
+2) `POST /cart/change.js` with `line`, `quantity`。  
+3) 用返回 cart 更新 `cartStore`。  
+4) 若数量为 0，视为删除。
+
+### 删除商品
+同 change，quantity=0 即删除；避免单独做删除 API。
+
+### 错误处理
+- 返回 422/400 时，显示服务端 message（库存不足、限购）。  
+- `cartStore.errors` 收敛错误，UI 统一展示。  
+- 失败后恢复按钮状态，不要锁死 Drawer。
+
+## 5. 与 PDP / Upsell 的协同方式
+
+- Cart 内 Upsell：在 Drawer 底部渲染推荐区，数据来自 Metaobjects 或推荐 API。点击 Upsell 仍走 `addToCart`，并重用相同状态流。
+- Bundles / Gifts：在状态层标记赠品/捆绑项；服务端返回 line item 属性标记。UI 避免用户误删关键赠品（用警示或确认）。
+
+## 6. 常见坑与注意事项
+
+- 并发请求：对连续加购/变更做请求队列或最后写入胜出；避免快速点击导致状态回滚。
+- 库存异常：始终以接口返回为准，收到 `quantity` 被回调时提示用户；不要相信本地缓存库存。
+- 与第三方插件冲突：确认是否有其他脚本也在改写 cart；统一占用事件命名空间，避免重复监听。逐步替换第三方后移除其监听。
+
+## 7. 可复用的工程 Checklist
+
+- [ ] `cartStore` 作为单一状态源，UI 不直接持有局部 cart 副本。  
+- [ ] 所有写操作后都用最新 cart 覆盖本地状态。  
+- [ ] Drawer 打开逻辑统一：加购成功打开，用户可手动关闭；支持配置是否自动打开。  
+- [ ] 按钮/输入有 loading 和禁用态，失败能恢复。  
+- [ ] 错误信息可见且可排查（库存、限购、权限）。  
+- [ ] Upsell/Bundles 复用同一 add/change 流程，避免二套逻辑。  
+- [ ] 埋点覆盖：打开 Drawer、行项目变更、加购成功/失败、Upsell 点击。  
+- [ ] 性能：首屏不阻塞；Drawer 内容懒加载图片；避免大尺寸 JSON 缓存在 localStorage。  
