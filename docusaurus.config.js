@@ -6,7 +6,8 @@
 
 import {themes as prismThemes} from 'prism-react-renderer';
 
-const BAIDU_TONGJI_ID = process.env.BAIDU_TONGJI_ID || 'YOUR_BAIDU_TONGJI_ID';
+const BAIDU_TONGJI_ID =
+  process.env.BAIDU_TONGJI_ID || 'e8de8aeb1991604e57e31a55ea8f696d';
 const organizationName = process.env.ORGANIZATION_NAME || 'shopxueyuan';
 const projectName = process.env.PROJECT_NAME || 'shopxueyuan.github.io';
 const siteUrl = `https://${organizationName}.github.io`;
