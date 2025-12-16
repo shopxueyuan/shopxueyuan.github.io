@@ -10,7 +10,7 @@ const BAIDU_TONGJI_ID =
   process.env.BAIDU_TONGJI_ID || 'e8de8aeb1991604e57e31a55ea8f696d';
 const organizationName = process.env.ORGANIZATION_NAME || 'shopxueyuan';
 const projectName = process.env.PROJECT_NAME || 'shopxueyuan.github.io';
-const siteUrl = `https://${organizationName}.github.io`;
+const siteUrl = process.env.SITE_URL || 'https://shopxueyuan.cn';
 const siteBaseUrl = process.env.SITE_BASE_URL || '/';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
