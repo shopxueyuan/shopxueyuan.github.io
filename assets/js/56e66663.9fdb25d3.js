@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkshopify_academy=globalThis.webpackChunkshopify_academy||[]).push([[6998],{1307:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"recipes"}')}}]);
