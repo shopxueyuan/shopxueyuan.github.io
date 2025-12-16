@@ -18,7 +18,7 @@ const siteBaseUrl = process.env.SITE_BASE_URL || '/';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Shopify 学院',
-  tagline: '面向开发者的 Shopify 学习与实践指南',
+  tagline: '面向开发者、运营者、中小商家与企业的 Shopify 全套知识与解决方案',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -48,24 +48,9 @@ const config = {
     locales: ['zh-Hans'],
   },
 
-  scripts:
-    process.env.NODE_ENV === 'production' &&
-    BAIDU_TONGJI_ID !== 'YOUR_BAIDU_TONGJI_ID'
-      ? [
-          {
-            id: 'baidu-tongji',
-            content: `
-              var _hmt = _hmt || [];
-              (function() {
-                var hm = document.createElement("script");
-                hm.src = "https://hm.baidu.com/hm.js?${BAIDU_TONGJI_ID}";
-                var s = document.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(hm, s);
-              })();
-            `,
-          },
-        ]
-      : [],
+  customFields: {
+    baiduTongjiId: BAIDU_TONGJI_ID,
+  },
 
   presets: [
     [
@@ -113,6 +98,17 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
+          {
+            type: 'dropdown',
+            label: '角色入口',
+            position: 'left',
+            items: [
+              {label: '商家入口', to: '/for-merchants'},
+              {label: '运营者入口', to: '/for-operators'},
+              {label: '开发者入口', to: '/for-developers'},
+              {label: '企业 / 决策者入口', to: '/for-enterprise'},
+            ],
+          },
           {
             type: 'dropdown',
             label: '学习路径',
@@ -195,6 +191,19 @@ const config = {
               {
                 label: 'Recipes',
                 href: '/recipes',
+              },
+            ],
+          },
+          {
+            title: '关于',
+            items: [
+              {
+                label: '关于我们',
+                href: '/about',
+              },
+              {
+                label: '服务区域',
+                href: '/about#service-area',
               },
             ],
           },

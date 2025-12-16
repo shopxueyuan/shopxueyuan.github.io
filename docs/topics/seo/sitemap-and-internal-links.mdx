@@ -1,0 +1,38 @@
+---
+title: Sitemap 与内链策略
+description: 推荐的站点树状结构、权重分配与内链模块，确保角色与主题清晰。
+sidebar_position: 2
+---
+
+# Sitemap 与内链策略
+
+## 推荐的逻辑结构
+- 首页 `/`
+- 角色入口 `/for-merchants` `/for-operators` `/for-developers` `/for-enterprise`
+- 学习路径 `/docs/tracks/*`
+- 主题聚合 `/docs/topics/*`
+- 资源库 `/docs/resources/*`
+- 企业服务 `/docs/enterprise-services/*`
+- 更新日志 `/docs/changelog/*`
+- Recipes 与示例 `/recipes/*`
+- 社区与联系 `/docs/community/*`、`/docs/enterprise-services/contact`
+
+## 权重与强调
+- 高权重：首页、四个角色入口、tracks 入口、topics 聚合页、enterprise-services 首页。
+- 次高：核心知识库与关键资源（checklists/templates/recipes）。
+- 低权重：占位或短公告，避免在导航与站点地图中过度曝光。
+
+## Docusaurus 配置提示
+- `url` 使用主域，`baseUrl` 与 `trailingSlash` 保持一致；如多源部署，canonical 指向主域。
+- `sitemap` 保持开启，`exclude` 仅用于草稿/临时页。
+
+## 内链模块（每篇文章底部建议固定）
+- 同主题延伸阅读 2–3 条。
+- 跨角色引导：运营↔开发落地，商家↔企业决策。
+- 上层聚合：返回所属 topic/track 与对应角色入口。
+- 轻量咨询入口：链接企业服务/解决方案。
+
+## 权重流动与引导
+- 执行者 → 决策者：在实操文末补「决策要点/ROI/风险」摘要，链接企业/决策者页。
+- 商家 → 企业：在规模化、团队、多区域话题中，链接 enterprise track 与 enterprise services。
+- 权重汇聚页：角色入口页、topics 聚合页、tracks 主页、enterprise-services 主页。

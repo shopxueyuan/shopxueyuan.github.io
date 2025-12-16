@@ -97,8 +97,8 @@ export default function Home() {
 
   return (
     <Layout
-      title="Shopify 学院"
-      description="面向中文地区的 Shopify 生态实践平台：学习路径、知识库、资源库与企业服务。"
+      title="Shopify 学院：商家、运营、开发与企业的实战指南"
+      description="Shopify 学院覆盖商家、运营、开发与企业的中文实践平台，提供选品与转化策略、运营增长与数据分析、主题与 App 架构实践，以及企业级决策参考，帮助团队在中文市场搭建、优化并规模化 Shopify 业务。"
     >
       <header className={styles.hero}>
         <div className="container">
@@ -106,7 +106,7 @@ export default function Home() {
             Shopify 学院
           </Heading>
           <p className={styles.heroSubtitle}>
-            面向中文地区的 Shopify 生态实践平台。当前重点建设 Developer Track，其余方向逐步完善。
+            面向中文市场的 Shopify 实战与决策参考平台，覆盖商家、运营、开发与企业，全栈方法论 + 可复用资源。
           </p>
 
           <div className={styles.heroActions}>
